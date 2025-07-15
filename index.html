@@ -19,21 +19,28 @@
         }
 
         .header {
-            text-align: center;
+            background: url('header.png') center/cover no-repeat;
+            color: white;
+            text-align: right;
+            padding: 20px 30px;
+            border-radius: 20px;
             margin-bottom: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
         }
 
         .header h1 {
             color: white;
-            margin: 0 0 10px 0;
-            font-weight: 700;
-            font-size: 2.2rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .header p {
@@ -268,8 +275,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Gerador de Assinatura</h1>
-            <p>Fundo Patrimonial Patronos - Voluntários</p>
+            <h1>Gerador de Assinaturas</h1>
         </div>
 
         <div class="generator">
@@ -287,8 +293,9 @@
                 </div>
 
                 <div class="form-row">
-                    <label for="diretoria">Diretoria</label>
+                    <label for="diretoria">Diretoria (opcional)</label>
                     <select id="diretoria">
+                        <option value="">Não incluir diretoria</option>
                         <option value="executiva">Diretoria Executiva</option>
                         <option value="captacao">Captação Individual</option>
                         <option value="corporativas">Relações Corporativas</option>
@@ -301,6 +308,16 @@
                         <option value="operacoes">Operações</option>
                         <option value="tecnologia">Tecnologia</option>
                         <option value="geral">Voluntário Geral</option>
+                    </select>
+                </div>
+                
+                <hr />
+                
+                <div class="form-row">
+                    <label for="signatureStyle">Estilo da Assinatura</label>
+                    <select id="signatureStyle">
+                        <option value="clean">Clean & Minimalista</option>
+                        <option value="complete">Completa & Colorida</option>
                     </select>
                 </div>
                 
@@ -355,13 +372,14 @@
             const jobTitle = document.getElementById("jobTitle").value || "Cargo/Função";
             const diretoria = document.getElementById("diretoria").value;
             const showPhone = showPhoneCheckbox.checked;
+            const signatureStyle = document.getElementById("signatureStyle").value;
 
             const phones = Array.from(document.querySelectorAll(".phone-input"))
                 .map(input => input.value.trim())
                 .filter(val => val.length > 0);
 
             const phoneRowsHTML = showPhone && phones.length
-                ? `<tr><td style="padding-top:8px; color: #727272;">${phones.join(" | ")}</td></tr>`
+                ? `<tr><td style="padding-top:8px; color: ${signatureStyle === 'clean' ? '#666666' : '#727272'};">${phones.join(" | ")}</td></tr>`
                 : "";
 
             // Definir texto da diretoria
@@ -380,7 +398,67 @@
                 geral: "Voluntário"
             };
 
-            const diretoriaText = diretoriaTexts[diretoria] || "Voluntário";
+            const diretoriaText = diretoria && diretoriaTexts[diretoria] ? diretoriaTexts[diretoria] : (diretoria ? "Voluntário" : "");
+            
+            if (signatureStyle === 'clean') {
+                generateCleanSignature(name, jobTitle, diretoriaText, phoneRowsHTML);
+            } else {
+                generateCompleteSignature(name, jobTitle, diretoriaText, phoneRowsHTML);
+            }
+        }
+        
+        function generateCleanSignature(name, jobTitle, diretoriaText, phoneRowsHTML) {
+            const signatureHTML = `
+                <table cellspacing="0" style="font-family: 'Nunito Sans', sans-serif;
+                    font-size: 14px;
+                    display: block;
+                    padding: 15px 0;
+                    color: #333333;
+                    line-height: 1.5;
+                    width: 100%;
+                    table-layout: auto;
+                    word-break: break-word;">
+                    
+                    <tr><td style="font-weight: 700; font-size: 16px; color: #333333; margin-bottom: 4px;">${name}</td></tr>
+                    <tr><td style="font-weight: 400; color: #666666; padding-top: 2px; font-size: 14px;">${jobTitle}</td></tr>
+                    ${diretoriaText ? `<tr><td style="color: #666666; padding-top: 1px; font-size: 13px;">${diretoriaText}</td></tr>` : ""}
+                    ${phoneRowsHTML}
+                    
+                    <tr><td style="display: block; padding-top: 15px;">
+                        <img src="Logo-Patronos-Principal.png" 
+                             alt="Fundo Patronos Logo" width="100" style="display: block;">
+                    </td></tr>
+                    
+                    <tr><td style="display: block; border-bottom: 1px solid #cccccc; margin: 12px 0; padding-top: 12px;"></td></tr>
+                    
+                    <tr><td style="padding-top: 8px; font-size: 13px;">
+                        <a href="${patronosData.website}" target="_blank" 
+                           style="color: #333333; text-decoration: none; margin-right: 15px; font-weight: 500;">
+                            Site
+                        </a>
+                        <a href="${patronosData.linkedin}" target="_blank" 
+                           style="color: #333333; text-decoration: none; margin-right: 15px;">
+                            LinkedIn
+                        </a>
+                        <a href="${patronosData.instagram}" target="_blank" 
+                           style="color: #333333; text-decoration: none; margin-right: 15px;">
+                            Instagram
+                        </a>
+                        <a href="${patronosData.youtube}" target="_blank" 
+                           style="color: #333333; text-decoration: none;">
+                            YouTube
+                        </a>
+                    </td></tr>
+                </table>
+            `;
+            
+            preview.innerHTML = signatureHTML;
+        }
+
+        // Adicionar event listener para o seletor de estilo
+        document.getElementById("signatureStyle").addEventListener("change", updatePreview);
+        
+        function generateCompleteSignature(name, jobTitle, diretoriaText, phoneRowsHTML) {
 
             const signatureHTML = `
                 <table cellspacing="0" style="font-family: 'Nunito Sans', sans-serif;
@@ -395,7 +473,7 @@
                     
                     <tr><td style="font-weight: 700; font-size: 18px; color: #E01B1B; letter-spacing: 0.5px;">${name}</td></tr>
                     <tr><td style="font-weight: 600; color: #2d3748; padding-top: 4px; font-size: 15px;">${jobTitle}</td></tr>
-                    <tr><td style="color: #718096; padding-top: 3px; font-size: 14px; font-weight: 500;">${diretoriaText}</td></tr>
+                    ${diretoriaText ? `<tr><td style="color: #718096; padding-top: 3px; font-size: 14px; font-weight: 500;">${diretoriaText}</td></tr>` : ""}
                     ${phoneRowsHTML}
                     
                     <tr><td style="display: block; padding-top: 25px;">

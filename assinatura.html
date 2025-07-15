@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Fundo Patronos - Gerador de Assinatura de E-mail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #F2F2F2;
+            font-family: 'Nunito Sans', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #E01B1B;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .header p {
+            color: #727272;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .generator {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-family: 'Nunito Sans', sans-serif;
+        }
+
+        .generator hr {
+            border: 1px dashed #E01B1B;
+            margin: 15px 0;
+            opacity: 0.3;
+        }
+
+        .form-section {
+            flex: 1 1 300px;
+            background: white;
+            max-width: 400px;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .form-section h3 {
+            margin-top: 0;
+            color: #E01B1B;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #911313;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #F2F2F2;
+            box-sizing: border-box;
+            border-radius: 6px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #E01B1B;
+        }
+
+        button {
+            background-color: #E01B1B;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            font-family: 'Nunito Sans', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #911313;
+        }
+
+        .copy-btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+
+        .preview-section {
+            flex: 1 1 700px;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .preview-section h3 {
+            margin-top: 0;
+            color: #E01B1B;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .phone-toggle-row {
+            margin-bottom: 15px;
+        }
+
+        .phone-toggle-row label {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .phone-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .signature-preview {
+            border: 2px dashed #FF6666;
+            margin: 15px 0;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 8px;
+            font-family: 'Nunito Sans', sans-serif;
+        }
+
+        .add-phone-btn {
+            width: 100%;
+            background: none;
+            border: 2px dashed #FF9700;
+            color: #FF9700;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .add-phone-btn:disabled {
+            color: #727272;
+            border-color: #727272;
+            cursor: not-allowed;
+        }
+
+        .add-phone-btn:hover:not(:disabled) {
+            background-color: #FF9700;
+            color: white;
+        }
+
+        .remove-phone-btn {
+            background: #911313;
+            padding: 10px 15px;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .instructions {
+            background: #FF6666;
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .instructions strong {
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .generator {
+                flex-direction: column;
+            }
+            
+            .form-section,
+            .preview-section {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 Gerador de Assinatura</h1>
+            <p>Fundo Patrimonial Patronos - Voluntários</p>
+        </div>
+
+        <div class="generator">
+            <div class="form-section">
+                <h3>Dados da Assinatura</h3>
+                
+                <div class="form-row">
+                    <label for="name">Nome completo</label>
+                    <input type="text" id="name" placeholder="Seu nome completo" />
+                </div>
+                
+                <div class="form-row">
+                    <label for="jobTitle">Cargo/Função</label>
+                    <input type="text" id="jobTitle" placeholder="Ex: Diretor de Marketing" />
+                </div>
+
+                <div class="form-row">
+                    <label for="diretoria">Diretoria</label>
+                    <select id="diretoria">
+                        <option value="executiva">Diretoria Executiva</option>
+                        <option value="captacao">Captação Individual</option>
+                        <option value="corporativas">Relações Corporativas</option>
+                        <option value="editais">Editais e Projetos</option>
+                        <option value="investimentos">Investimentos</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="pmo">PMO</option>
+                        <option value="riscos">Riscos & Compliance</option>
+                        <option value="pessoas">Pessoas</option>
+                        <option value="operacoes">Operações</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="geral">Voluntário Geral</option>
+                    </select>
+                </div>
+                
+                <hr />
+                
+                <div class="form-row phone-toggle-row">
+                    <label>
+                        <input type="checkbox" id="showPhone" />
+                        Incluir número(s) de telefone
+                    </label>
+                </div>
+                
+                <div id="phoneContainer" style="display: none">
+                    <div id="phoneFields"></div>
+                    <button type="button" id="addPhoneBtn" class="add-phone-btn">
+                        + Adicionar telefone
+                    </button>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <h3>Visualização em Tempo Real</h3>
+                <div id="signature-preview" class="signature-preview"></div>
+                <button id="copy-btn" class="copy-btn">📋 Copiar Assinatura</button>
+                <div class="instructions">
+                    <strong>Instruções:</strong> Após clicar em "Copiar Assinatura", cole diretamente na área de assinatura do Gmail usando <strong>Ctrl+V</strong>. A formatação será preservada automaticamente.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const preview = document.getElementById("signature-preview");
+        const copyBtn = document.getElementById("copy-btn");
+        const showPhoneCheckbox = document.getElementById("showPhone");
+        const phoneContainer = document.getElementById("phoneContainer");
+        const addPhoneBtn = document.getElementById("addPhoneBtn");
+        const MAX_PHONES = 3;
+        let phoneCount = 0;
+
+        // Dados específicos do Patronos
+        const patronosData = {
+            website: "https://www.patronos.org/",
+            linkedin: "https://www.linkedin.com/company/fundo-patronos/",
+            instagram: "https://www.instagram.com/fundopatronos/",
+            youtube: "https://www.youtube.com/channel/UCB0llERivGLI9cMWCorI-nQ",
+            email: "contato@patronos.org"
+        };
+
+        function updatePreview() {
+            const name = document.getElementById("name").value || "Nome Completo";
+            const jobTitle = document.getElementById("jobTitle").value || "Cargo/Função";
+            const diretoria = document.getElementById("diretoria").value;
+            const showPhone = showPhoneCheckbox.checked;
+
+            const phones = Array.from(document.querySelectorAll(".phone-input"))
+                .map(input => input.value.trim())
+                .filter(val => val.length > 0);
+
+            const phoneRowsHTML = showPhone && phones.length
+                ? `<tr><td style="padding-top:8px; color: #727272;">${phones.join(" | ")}</td></tr>`
+                : "";
+
+            // Definir texto da diretoria
+            const diretoriaTexts = {
+                executiva: "Diretoria Executiva",
+                captacao: "Captação Individual",
+                corporativas: "Relações Corporativas", 
+                editais: "Editais e Projetos",
+                investimentos: "Investimentos",
+                marketing: "Marketing",
+                pmo: "PMO",
+                riscos: "Riscos & Compliance",
+                pessoas: "Pessoas",
+                operacoes: "Operações",
+                tecnologia: "Tecnologia",
+                geral: "Voluntário"
+            };
+
+            const diretoriaText = diretoriaTexts[diretoria] || "Voluntário";
+
+            const signatureHTML = `
+                <table cellspacing="0" style="font-family: 'Nunito Sans', sans-serif;
+                    font-size: 14px;
+                    display: block;
+                    padding: 20px 0;
+                    color: #727272;
+                    line-height: 1.4;
+                    width: 100%;
+                    table-layout: auto;
+                    word-break: break-word;">
+                    
+                    <tr><td style="font-weight: 700; font-size: 16px; color: #E01B1B;">${name}</td></tr>
+                    <tr><td style="font-weight: 600; color: #911313; padding-top: 2px;">${jobTitle}</td></tr>
+                    <tr><td style="color: #727272; padding-top: 2px;">${diretoriaText}</td></tr>
+                    ${phoneRowsHTML}
+                    
+                    <tr><td style="display: block; padding-top: 20px;">
+                        <img src="Logo-Patronos-Principal.png" 
+                             alt="Fundo Patronos Logo" width="120" style="display: block;">
+                    </td></tr>
+                    
+                    <tr><td style="display: block; border-bottom: 1px solid #FF6666; margin: 10px 0; padding-top: 15px;"></td></tr>
+                    
+                    <tr><td style="padding-top: 12px;">
+                        <a href="${patronosData.website}" target="_blank" 
+                           style="color: #E01B1B; text-decoration: none; align-items: center; margin-right: 15px; margin-bottom: 8px; display: inline-block; font-weight: 600;">
+                            🌐 patronos.org
+                        </a>
+                        <br>
+                        <a href="${patronosData.linkedin}" target="_blank" 
+                           style="color: #E01B1B; text-decoration: none; align-items: center; margin-right: 15px; margin-bottom: 8px; display: inline-block;">
+                            <img src="linkedin.png" alt="LinkedIn" width="16" height="16" style="vertical-align: middle; margin-right: 4px;"> fundo-patronos
+                        </a>
+                        <a href="${patronosData.instagram}" target="_blank" 
+                           style="color: #E01B1B; text-decoration: none; align-items: center; margin-right: 15px; margin-bottom: 8px; display: inline-block;">
+                            <img src="instagram.webp" alt="Instagram" width="16" height="16" style="vertical-align: middle; margin-right: 4px;"> fundopatronos
+                        </a>
+                        <a href="${patronosData.youtube}" target="_blank" 
+                           style="color: #E01B1B; text-decoration: none; align-items: center; margin-bottom: 8px; display: inline-block;">
+                            <img src="youtube.png" alt="YouTube" width="16" height="16" style="vertical-align: middle; margin-right: 4px;"> FundoPatronos
+                        </a>
+                    </td></tr>
+                    
+                    <tr><td style="padding-top: 15px; font-size: 12px; color: #727272; font-style: italic;">
+                        "Juntos, transformamos potencial em realidade 🚀"
+                    </td></tr>
+                </table>
+            `;
+
+            preview.innerHTML = signatureHTML;
+        }
+
+        function addPhoneField() {
+            if (phoneCount >= MAX_PHONES) return;
+
+            const div = document.createElement("div");
+            div.className = "form-row phone-row";
+            div.innerHTML = `
+                <input type="tel" class="phone-input" placeholder="(11) 99999-9999">
+                <button type="button" class="remove-phone-btn">Remover</button>
+            `;
+
+            document.getElementById("phoneFields").appendChild(div);
+            phoneCount++;
+
+            div.querySelector(".phone-input").addEventListener("input", updatePreview);
+            div.querySelector(".remove-phone-btn").addEventListener("click", () => {
+                div.remove();
+                phoneCount--;
+                addPhoneBtn.disabled = false;
+                addPhoneBtn.textContent = "+ Adicionar telefone";
+                updatePreview();
+            });
+
+            if (phoneCount >= MAX_PHONES) {
+                addPhoneBtn.disabled = true;
+                addPhoneBtn.textContent = "Máximo atingido!";
+            }
+
+            updatePreview();
+        }
+
+        addPhoneBtn.addEventListener("click", addPhoneField);
+
+        showPhoneCheckbox.addEventListener("change", () => {
+            const isChecked = showPhoneCheckbox.checked;
+            phoneContainer.style.display = isChecked ? "block" : "none";
+
+            if (isChecked && phoneCount === 0) {
+                addPhoneField();
+            }
+
+            updatePreview();
+        });
+
+        document.querySelectorAll("input, select").forEach(input => {
+            input.addEventListener("input", updatePreview);
+        });
+
+        copyBtn.addEventListener("click", function() {
+            const table = preview.querySelector("table");
+            if (table) {
+                const originalWidth = table.style.width;
+                table.style.width = "600px";
+
+                const range = document.createRange();
+                range.selectNodeContents(preview);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+                try {
+                    const success = document.execCommand("copy");
+                    this.textContent = success ? "✅ Copiado!" : "❌ Erro ao copiar";
+                    this.style.backgroundColor = success ? "#FF9700" : "#911313";
+                } catch {
+                    this.textContent = "❌ Erro ao copiar";
+                    this.style.backgroundColor = "#911313";
+                }
+
+                selection.removeAllRanges();
+                table.style.width = originalWidth;
+
+                setTimeout(() => {
+                    this.textContent = "📋 Copiar Assinatura";
+                    this.style.backgroundColor = "#E01B1B";
+                }, 3000);
+            }
+        });
+
+        // Inicializar a preview
+        updatePreview();
+    </script>
+</body>
+</html>
